@@ -17,17 +17,17 @@ check_token(Token) ->
         _ -> {error, Response}
     end.
 
-get(Path, Struct) when is_tuple(Path) ->
+get_field(Path, Struct) when is_tuple(Path) ->
     get_val(tuple_to_list(Path), Struct);
-get(Key, {struct, List}) ->
+get_field(Key, {struct, List}) ->
     proplists:get_value(Key, List).
 
 get_val(_, undefined) ->
     undefined;
 get_val([Key], Struct) ->
-    get_value(Key, Struct);
+    get_field(Key, Struct);
 get_val([Key | T], Struct) ->
-    get_val(T, get_value(Key, Struct)).
+    get_val(T, get_field(Key, Struct)).
 
 start_inets() ->
     case inets:start() of

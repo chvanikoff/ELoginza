@@ -17,9 +17,9 @@ Dummy example of using the module:
         end.
 
     authorize_user(Data) ->
-        Username = eloginza:get(nickname, Data),
-        Full_name = eloginza:get({name, full_name}, Data),
-        Mobile_phone = eloginza:get({phone, mobile}, Data),
+        Username = eloginza:get_field(nickname, Data),
+        Full_name = eloginza:get_field({name, full_name}, Data),
+        Mobile_phone = eloginza:get_field({phone, mobile}, Data),
         complete_auth(Username, Full_name, Mobile_phone).
 
 Feel free to contact me with any questions/suggestions.

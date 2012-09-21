@@ -4,7 +4,7 @@
 
 -include("eloginza.hrl").
 
--export([check_token/1, get/2]).
+-export([check_token/1, get_field/2 ]).
 
 check_token(Token) ->
     ok = start_inets(),

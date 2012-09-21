@@ -4,12 +4,15 @@
 
 -include("eloginza.hrl").
 
--export([check_token/1, get_field/2 ]).
+-export([check_token/1, check_token/3, get_field/2 ]).
 
 check_token(Token) ->
+    check_token(Token, ?ELOGINZA_WIDGET_ID, ?ELOGINZA_API_SIGNATURE).
+
+check_token(Token, Widget_id, API_signature) ->
     ok = start_inets(),
     {ok, {{_HttpVersion, 200, "OK"}, _Headers, JSON}} = httpc:request(get, {
-        "http://loginza.ru/api/authinfo?token=" ++ Token ++ "&id=" ++ ?ELOGINZA_WIDGET_ID ++ "&sig=" ++ ?ELOGINZA_API_SIGNATURE,
+        "http://loginza.ru/api/authinfo?token=" ++ Token ++ "&id=" ++ Widget_id ++ "&sig=" ++ API_signature,
         []}, [], []),
     Response = mochijson2:decode(JSON),
     case get_value(error_type, Response) of

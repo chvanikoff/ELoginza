@@ -4,18 +4,22 @@
 
 -include("eloginza.hrl").
 
--export([check_token/1, check_token/3, get_field/2 ]).
+-export([check_token/1, check_token/2, get_field/2 ]).
 
 check_token(Token) ->
-    check_token(Token, ?ELOGINZA_WIDGET_ID, ?ELOGINZA_API_SIGNATURE).
+    check_token(Token, [{widget_id, ?ELOGINZA_WIDGET_ID}, {api_signature, ?ELOGINZA_API_SIGNATURE}]).
 
-check_token(Token, Widget_id, API_signature) ->
+check_token(Token, Params) ->
     ok = start_inets(),
+    Widget_ID = proplists:get_value(widget_id, Params),
+    API_signature = proplists:get_value(api_signature, Params),
+    io:format("ID: ~p~n", [Widget_ID]),
+    io:format("SIG: ~p~n", [API_signature]),
     {ok, {{_HttpVersion, 200, "OK"}, _Headers, JSON}} = httpc:request(get, {
-        "http://loginza.ru/api/authinfo?token=" ++ Token ++ "&id=" ++ Widget_id ++ "&sig=" ++ API_signature,
+        lists:concat(["http://loginza.ru/api/authinfo?token=", Token, "&id=", Widget_ID, "&sig=", API_signature]),
         []}, [], []),
     Response = mochijson2:decode(JSON),
-    case get_value(error_type, Response) of
+    case get_field(error_type, Response) of
         undefined -> {ok, Response};
         _ -> {error, Response}
     end.

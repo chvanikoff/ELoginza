@@ -13,8 +13,6 @@ check_token(Token, Params) ->
     ok = start_inets(),
     Widget_ID = proplists:get_value(widget_id, Params),
     API_signature = proplists:get_value(api_signature, Params),
-    io:format("ID: ~p~n", [Widget_ID]),
-    io:format("SIG: ~p~n", [API_signature]),
     {ok, {{_HttpVersion, 200, "OK"}, _Headers, JSON}} = httpc:request(get, {
         lists:concat(["http://loginza.ru/api/authinfo?token=", Token, "&id=", Widget_ID, "&sig=", API_signature]),
         []}, [], []),
